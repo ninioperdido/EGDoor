@@ -25,12 +25,37 @@
 #ifndef Bluetooth_h
 #define Bluetooth_h
 
+#include <SoftwareSerial.h>
+
+
+// Start String
+#define SS \r\n
+// End String
+#define ES \r\n
+
+// Working Mode
+#define WM +STWMOD=
+// Name
+#define SN +STNA=
+
+
 class Bluetooth
 {
 
  public:
-  Bluetooth(int rx, int tx);
+  /*
+  Put pinModes and inits serial communication
+  with the BT module
+  */
+  Bluetooth(int RX, int TX, int BaudRate);
+
+  /*
+  Set working mode:
+  0: slave.
+  1: master.
+  */
   void setWorkingMode(String mode);
+
   void setBaudRate(int br);
   void setDeviceName(String name);
   void autoConnect(bool activate);
@@ -46,6 +71,8 @@ class Bluetooth
  private:
   int rx;
   int tx;
+  int baudrate;
+  SoftwareSerial *serial;
   String pincode;
   String mode;
   bool autoconnect;

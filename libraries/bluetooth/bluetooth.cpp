@@ -23,8 +23,28 @@
 #include "Arduino.h"
 #include "Bluetooth.h"
 
-Bluetooth:Bluetooth(int RX, int TX)
-{
+Bluetooth::Bluetooth(int RX, int TX, int BaudRate=38400)
+{ 
+  rx = RX;
+  tx = TX;
+  baudrate = BaudRate;
+  pinMode(rx, INPUT);
+  pinMode(tx, OUTPUT);
+  serial = SoftwareSerial(rx,tx);
+  // TODO: Check valid baud rates
+  serial.begin(baudrate);
+  serial.flush();
+}
 
+void workingMode(String mode)
+{
+  // TODO: Check mode is 1 or 0
+  serial.print(SS+WM+mode+ES);
+}
+
+void setName(String name)
+{
+  //TODO: Check max size for name
+  serial.print(SS+SN+name+ES);
 }
 
