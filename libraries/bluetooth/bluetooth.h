@@ -37,6 +37,21 @@
 #define WM +STWMOD=
 // Name
 #define SN +STNA=
+// Pin code
+#define PN +STPIN=
+// AutoConnect
+#define AC +STAUTO=
+// Permit Connection
+#define PC +STOAUT=
+// Connect to device
+#define CD +CONN=
+// Inquire
+#define IN +INQ=
+// Autoreconnect
+#define AR +LOSSRECONN=
+// Input Pin Code
+#define IP +RTPIN=
+
 
 
 class Bluetooth
@@ -51,17 +66,31 @@ class Bluetooth
 
   /*
   Set working mode:
-  0: slave.
-  1: master.
+  False: slave.
+  True: master.
   */
-  void setWorkingMode(String mode);
+  void setWorkingMode(bool mode);
+  bool getWorkingMode();
+  
+  //void setBaudRate(int br);
 
-  void setBaudRate(int br);
-  void setDeviceName(String name);
-  void autoConnect(bool activate);
-  void permitConnect(bool activate);
-  void setPinCode(long pin);
-  void deletePinCode();
+  void setName(String name);
+  String getName();
+
+  void setAutoConnect(bool activate);
+  bool getAutoConnect();
+
+  void setPermitConnect(bool activate);
+  bool getPermitConnect();
+
+  void setPinCode(int pin);
+  int  getPinCode();
+
+  void connectToDevice(String address);
+  void inquire(bool activate);
+  // Autoreconnecting when master is beyond range
+  void setAutoReconnect(bool activate);
+  void inputPinCode(int pin);
 
   String readLocalAddress();
   String inquiry();
@@ -73,8 +102,9 @@ class Bluetooth
   int tx;
   int baudrate;
   SoftwareSerial *serial;
-  String pincode;
-  String mode;
+  String name;
+  int pin;
+  bool mode;
   bool autoconnect;
   bool permitconnect;
 }

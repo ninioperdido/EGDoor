@@ -36,15 +36,109 @@ Bluetooth::Bluetooth(int RX, int TX, int BaudRate=38400)
   serial.flush();
 }
 
-void workingMode(String mode)
+
+void Bluetooth::setWorkingMode(bool mode)
 {
-  // TODO: Check mode is 1 or 0
-  serial.print(SS+WM+mode+ES);
+  this.mode = mode
+  if master
+  {
+    serial.print(SS+WM+"1"+ES);
+  }
+  else
+  {
+    serial.print(SS+WM+"0"+ES);
+  }
 }
 
-void setName(String name)
+String Bluetooth:getWorkingMode()
+{
+  return this.mode;
+}
+
+void Bluetooth::setName(String name)
 {
   //TODO: Check max size for name
   serial.print(SS+SN+name+ES);
+  this.name = name;
 }
+
+String Bluetooth::getName()
+{
+  return this.name;
+}
+
+void Bluetooth::setPinCode(int pin)
+{
+  //TODO: Check PIN has max 4 digits
+  serial.print(SS+PN+String(pin)+ES);
+  this.pin = pin;
+}
+
+int Bluetooth::getPinCode()
+{
+  return this.pin;
+}
+
+void Bluetooth::setAutoConnect(bool activate)
+{
+  this.autoconnect = activate;
+  if activate 
+  {
+    serial.print(SS+AC+"1"+ES);
+  }
+  else
+  {
+    serial.print(SS+AC+"0"+ES);
+  }
+}
+
+void Bluetooth::setPermitConnection(bool activate)
+{
+  if activate 
+  {
+    serial.print(SS+PC+"1"+ES);
+  }
+  else
+  {
+    serial.print(SS+PC+"0"+ES);
+  }
+}
+
+void Bluetooth::connectToDevice(String address)
+{
+  //TODO: Filter output of serial to return the state of the connection
+  serial.print(SS+CD+address+ES);
+}
+
+void Bluetooth::inquire(bool activate)
+{
+  if activate 
+  {
+    serial.print(SS+IN+"1"+ES);
+  }
+  else
+  {
+    serial.print(SS+IN+"0"+ES);
+  }
+}
+
+void Bluetooth::setAutoReconnect(bool activate)
+{
+  //TODO: If the device has been initialized as master
+  // then we cannot activate autoreconnect.
+  if activate 
+  {
+    serial.print(SS+AR+"1"+ES);
+  }
+  else
+  {
+    serial.print(SS+AR+"0"+ES);
+  }
+}
+
+void Bluetooth::inputPinCode(int pin)
+{
+  serial.print(SS+IP+String(pin)+ES);
+}
+
 
