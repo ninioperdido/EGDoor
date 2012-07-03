@@ -20,26 +20,25 @@
  *
  */
 
-#include "Arduino.h"
 #include "Bluetooth.h"
 
-Bluetooth::Bluetooth(int RX, int TX, int BaudRate=38400)
+Bluetooth::Bluetooth(uint8_t RX, uint8_t TX, int BaudRate=38400) : serial(SoftwareSerial(RX, TX)
 { 
   rx = RX;
   tx = TX;
   baudrate = BaudRate;
   pinMode(rx, INPUT);
   pinMode(tx, OUTPUT);
-  serial = SoftwareSerial(rx,tx);
+  serial = SoftwareSerial(rx,tx, false);
   // TODO: Check valid baud rates
   serial.begin(baudrate);
   serial.flush();
 }
 
-
+/*
 void Bluetooth::setWorkingMode(bool mode)
 {
-  this.mode = mode
+  this.mode = mode;
   if master
   {
     serial.print(SS+WM+"1"+ES);
@@ -67,11 +66,14 @@ String Bluetooth::getName()
   return this.name;
 }
 
-void Bluetooth::setPinCode(int pin)
+void Bluetooth::setPinCode(String pin)
 {
-  //TODO: Check PIN has max 4 digits
-  serial.print(SS+PN+String(pin)+ES);
-  this.pin = pin;
+    if (pin.length() >= 4) {
+      serial.print(SS+PN+String(pin).substring(0,3)+ES);
+      this.pin = pin;
+    }
+    else
+      println(PTS);
 }
 
 int Bluetooth::getPinCode()
@@ -125,7 +127,7 @@ void Bluetooth::inquire(bool activate)
 void Bluetooth::setAutoReconnect(bool activate)
 {
   //TODO: If the device has been initialized as master
-  // then we cannot activate autoreconnect.
+  // then we cannot activate autoreconnect
   if activate 
   {
     serial.print(SS+AR+"1"+ES);
@@ -141,4 +143,22 @@ void Bluetooth::inputPinCode(int pin)
   serial.print(SS+IP+String(pin)+ES);
 }
 
+void Bluetooth::readLocalAddress()
+{
+  serial.print(SS+RT+ES);
+}
+
+void Bluetooth::inquiry(activate)
+{
+  if activate
+    serial.print(SS+INQ+"1"+ES);
+  else
+    serial.print(SS+INQ+"0"+ES);
+}
+
+void Bluetooth::connectToDevice(String address)
+{
+  serial.print(SS+CD+address+ES);
+}
+*/
 

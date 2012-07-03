@@ -20,13 +20,11 @@
  *
  */
 
-#include "Arduino.h"
-
 #ifndef Bluetooth_h
 #define Bluetooth_h
 
-#include <SoftwareSerial.h>
-
+#include "Arduino.h"
+#include "SoftwareSerial.h"
 
 // Start String
 #define SS \r\n
@@ -51,7 +49,14 @@
 #define AR +LOSSRECONN=
 // Input Pin Code
 #define IP +RTPIN=
-
+// Pin too short message
+#define PTS "The PIN must be at least 4 character long"
+// Inquiry
+#define IN +INQ=
+// Read local address
+#define RT +RTADDR
+// Connect to device
+#define CD +CONN=
 
 
 class Bluetooth
@@ -62,7 +67,7 @@ class Bluetooth
   Put pinModes and inits serial communication
   with the BT module
   */
-  Bluetooth(int RX, int TX, int BaudRate);
+  Bluetooth(uint8_t RX, uint8_t TX, int BaudRate);
 
   /*
   Set working mode:
@@ -83,7 +88,7 @@ class Bluetooth
   void setPermitConnect(bool activate);
   bool getPermitConnect();
 
-  void setPinCode(int pin);
+  void setPinCode(String pin);
   int  getPinCode();
 
   void connectToDevice(String address);
@@ -92,22 +97,19 @@ class Bluetooth
   void setAutoReconnect(bool activate);
   void inputPinCode(int pin);
 
-  String readLocalAddress();
-  String inquiry();
-  String connectToDevice(String address);
-  String status();
+  void readLocalAddress();
 
  private:
-  int rx;
-  int tx;
+  uint8_t rx;
+  uint8_t tx;
   int baudrate;
-  SoftwareSerial *serial;
+  SoftwareSerial serial;
   String name;
   int pin;
   bool mode;
   bool autoconnect;
   bool permitconnect;
-}
+};
 
 #endif
 
