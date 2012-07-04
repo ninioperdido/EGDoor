@@ -1,19 +1,16 @@
 
-
 #include <SoftwareSerial.h>   
 #include <Bluetooth.h>
 
 #define RxD 2
 #define TxD 3
 #define BR 38400
-#define DEBUG_ENABLED  1
 
-//Start symbol when returning INQuiry result
-String retSymb = "+RTINQ=";
+const char* deviceName = "EGDoorSN001";
+boolean master = true;
 //PIN Code of this device
-String pinCode = "5678";
+const char* pinCode = "5678";
 //Name of this device:
-String deviceName = "EGDoorProto1";
 //List of authorized devices
 String authorizedDevices = "00,24,BA,FB,67,16";
 //String authDevices = "90,C1,15,80,57,F5|C8,BC,C8,B1,F2,46|";
@@ -25,45 +22,46 @@ int addrIndex = 0;
 String recvBuf;
 String slaveAddr;
 
-String connectCmd = "\r\n+CONN=";
-
-SoftwareSerial BTSerial(RxD,TxD);
 Bluetooth bt(RxD, TxD, BR);
-
 
 void setup() 
 { 
   Serial.begin(9600);
-  pinMode(RxD, INPUT);
-  pinMode(TxD, OUTPUT);
+  Serial.flush();
+
   setupBT();
   //wait 1s and flush the serial buffer
-  delay(1000);
-  Serial.flush();
-  BTSerial.flush();
+  delay(2000);
 } 
  
 void loop() 
 {
-  tryToConnectToAuthDev(authDevices);
-  char recvChar;
-  while(1){
-    if(BTSerial.available()){
+  //tryToConnectToAuthDev(authDevices);
+  //char recvChar;
+  //while(1){
+  //  if(BTSerial.available()){
       //check if there's any data sent from the remote bluetooth shield
-      recvChar = BTSerial.read();
-      Serial.print(recvChar);
-    }
-    if(Serial.available()){
-      //check if there's any data sent from the local serial terminal
-      //you can add the other applications here
-      recvChar  = Serial.read();
-      BTSerial.print(recvChar);
-    }	
- } 
+ //     recvChar = BTSerial.read();
+ //     Serial.print(recvChar);
+ //   }
+ //   if(Serial.available()){
+ //     //check if there's any data sent from the local serial terminal
+ //     //you can add the other applications here
+ //     recvChar  = Serial.read();
+ //     BTSerial.print(recvChar);
+ //   }
+ delay(1000);
+ Serial.println(bt.getPinCode());
 } 
  
 void setupBT()
 {
+  bt.setWorkingMode(master);
+  bt.setName(deviceName);
+  bt.setPinCode(pinCode);
+  bt.setAutoConnect(false);
+}
+  /*
   //Set BT BaudRate
   BTSerial.begin(38400);
   //Set the BT work in master mode
@@ -81,6 +79,7 @@ void setupBT()
   //BTSerial.print("\r\n+INQ=1\r\n");//make the master inquire
   //Serial.println("Inquiring!");
   delay(2000); // This delay is required.
+  
 }
 
 void tryToConnectToAuthDev(String authDevices)
@@ -175,4 +174,4 @@ void inQuiRy()
   }while(0 == connectOK);
 }
  
-
+*/
