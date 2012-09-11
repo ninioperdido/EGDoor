@@ -6,17 +6,92 @@ from xml.dom.minidom import parse
  
 class AccessError(Exception):
     pass
- 
+
+
+from datetime import datetime, time, date
+
+class TimedAccess(object):
+    """A TimedAccess is an object that defined when a Role can access to a Resource."""
+    def __init__(self, name='', since=None, to=None):
+      
+      self.name = name
+                       #Monday                                 
+      self._weekdays = {0: {time(0, 0): True, time(23,59): True},
+                        1: {time(0, 0): True, time(23,59): True},
+                        2: {time(0, 0): True, time(23,59): True},
+                        3: {time(0, 0): True, time(23,59): True},
+                        4: {time(0, 0): True, time(23,59): True},
+                        5: {time(0, 0): True, time(23,59): True},
+                        6: {time(0, 0): True, time(23,59): True},}
+                       #Sunday
+      now = date.today()
+      max = date.max
+      if since == None:
+        self._since = now
+      else:
+        self._since = since
+
+      if to == None:
+        self._to = max
+      else:
+        self._to = to
+      
+      print self
+    
+    def set_day(self, dow=7, hoursperday={time(0, 0): True, time(23,59): True}):
+      assert 0 <= dow <= 7
+      for time, access in hoursperday.iteritems():
+        assert access == True or access == False
+
+      if dow == 7:
+        for weekday in iter(self._weekdays):
+          self._weekdays[weekday] = hoursperday
+
+      else:
+        self._weekdays[dow] = hoursperday
+
+    def has_access(self):
+      haccess = False
+      now = date.today()
+      if now >= self._since and now <= self._to:
+        dt = now.timetuple()
+        dow = self._weekdays[getattr(dt,'tm_wday')]
+        now = datetime.now().time()
+        for time, access in dow.iteritems():
+            print "Time %s, Access %s" % (time, access)
+            if access and time <= now:
+              haccess = True
+            if not access and time >= now:
+              haccess = False
+      return haccess
+  
+    def __str__(self):
+      rpr = self.name + ': '
+      for weekday, hoursperday in self._weekdays.iteritems():
+        rpr += "%s:%s " % (weekday, hoursperday)
+      rpr += "Since:%s " % (self._since)
+      rpr += "To:%s " % (self._to)
+      return rpr
+
+
 class Resource(object):
     """An Resource is an object that can be accessed by a Role."""
     def __init__(self, name=''):
         self.name = name
         self._privileges = {}
+        self._timedaccess = {}
  
     def set_privilege(self, privilege, allowed=True):
         self._privileges[privilege] = allowed
+
+    def set_timedaccess(self, privilege, timedaccess):
+        self._timedaccess[privilege] = timedaccess
  
     def has_access(self, privilege):
+        if privilege in self._privileges \
+           and privilege in self._timedaccess:
+          return self._privileges[privilege] \
+                 and self._timedaccess[privile].has_acces()
         if privilege in self._privileges:
             return self._privileges[privilege]
         return False
