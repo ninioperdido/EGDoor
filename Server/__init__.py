@@ -16,14 +16,63 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+def main():
+  try:
+    # Imports
+    import sys
+    import acl
+    import logging
+    # Global configuration
+    logging.basicConfig(filename='./.EGDoor.log', level=logging.INFO, format='%(asctime)s %(levelname)s : %(message)s')
+    logging.info('Started')
+    open_by_default = True
+    
+    # acl structure
+    # try to load acl structure
+    try:
+      egd_acl = acl.Config.load("Acl")
+    except Exception as e:
+      logging.warning("Except loading previous acl configuration, creating a new one %s" % e)
+      egd_acl = default_acl()
+
+    tcommand = ThreadCommand(logging)
+    tcommand.setDaemon(True)
+    tcommand.start()
+   
+    tsearch = ThreadSearch(logging)
+    tsearch.setDaemon(True)
+    tsearch.start()
+ 
+    
+    while(True):
+      pass
+  except KeyboardInterrupt:
+    logging.exception('Finished due to:')
+    sys.exit(0)
+
 import threading
 class ThreadSearch(threading.Thread):
+  
+  def __init__(self, logging):
+    threading.Thread.__init__(self)
+    self.logging = logging
+  
   def run(self):
     print "Hello World, I'm searching!"
+    #while(True):
+    #  pass
+
 
 class ThreadCommand(threading.Thread):
+  
+  def __init__(self, logging):
+    threading.Thread.__init__(self)
+    self.logging = logging
+
   def run(self):
-    print "Hello World, I'm expecting a command!"
+    import btserver
+    self.logging.info("Starting Command BT Server ...")
+    bts = btserver.BTServer()
 
 import acl
 def default_acl():
@@ -50,32 +99,5 @@ def default_acl():
   return defaultacl
 
 if __name__ == "__main__":
-
-  # Imports
-  import acl
-  #from bluetooth import *
-  # Global configuration
-
-  open_by_default = True
-  
-  # acl structure
-  # try to load acl structure
-  try:
-    egd_acl = acl.Config.load("Acl")
-  except Exception as e:
-    print "Except loading previous acl configuration, creating a new one"
-    egd_acl = default_acl()
-
-  print "EGD_ACL: %s" % egd_acl
-  print "User has access to open the lock: %s" % egd_acl.check_access('user', 'lock', 'open')
-  print "User has access to close the lock: %s" % egd_acl.check_access('user', 'lock', 'close')
-  print "Manager has access to open the lock: %s" % egd_acl.check_access('manager', 'lock', 'open')
-  print "Manager has access to close the lock: %s" % egd_acl.check_access('manager', 'lock', 'close')
-
-
-  tsearch = ThreadSearch()
-  tsearch.start()
-  tcommand = ThreadCommand()
-  tcommand.start()
-
+  main()
 
