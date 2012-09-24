@@ -2,13 +2,11 @@
 # Many thanks to Dave Thompson
 # www.limscoder.com/2009/11/role-based-security-with-python.html
 
-from xml.dom.minidom import parse
-import cPickle as pickle
-
 class AccessError(Exception):
     pass
 
 from datetime import datetime, time, date
+from utils import config
 
 class TimedAccess(object):
     """A TimedAccess is an object that defined when a Role can access to a Resource."""
@@ -187,18 +185,4 @@ class Acl(object):
 
     def Resource(self, name):
       return Resource(name)
-
-class Config(object):
-  """ class to dump and load object configuration """
-  conf_path = "./."
-  conf_ext =  ".egd"
-
-  @staticmethod
-  def save(obj):
-    pickle.dump(obj, open(Config.conf_path+str(type(obj).__name__)+Config.conf_ext, "wb"))
-
-  @staticmethod
-  def load(tobj):
-    return pickle.load(open(Config.conf_path+tobj+Config.conf_ext, "rb"))
-
 

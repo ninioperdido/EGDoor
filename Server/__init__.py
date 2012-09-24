@@ -16,21 +16,29 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-def main():
+__all__ = ["systemconfig", "utils", "btserver", "acl"]
+
+import logging
+import traceback
+import os
+
+logging.basicConfig(filename=os.path.expanduser('~')+'/.egd.log', level=logging.INFO, format='%(asctime)s %(levelname)s : %(message)s')
+
+
+if __name__ == '__main__':
+
+  logging.info('EGDoor Server Started')
   try:
     # Imports
     import sys
     import acl
-    import logging
     # Global configuration
-    logging.basicConfig(filename='./.EGDoor.log', level=logging.INFO, format='%(asctime)s %(levelname)s : %(message)s')
-    logging.info('Started')
     open_by_default = True
     
     # acl structure
     # try to load acl structure
     try:
-      egd_acl = acl.Config.load("Acl")
+      egd_acl = acl.config.load("Acl")
     except Exception as e:
       logging.warning("Except loading previous acl configuration, creating a new one %s" % e)
       egd_acl = default_acl()
@@ -47,7 +55,7 @@ def main():
     while(True):
       pass
   except KeyboardInterrupt:
-    logging.exception('Finished due to:')
+    logging.exception('EGDoor Server Finished due to:')
     sys.exit(0)
 
 import threading
