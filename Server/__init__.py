@@ -16,11 +16,12 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__all__ = ["systemconfig", "utils", "btserver", "acl"]
+__all__ = ["systemconfig", "utils", "btserver", "acl", "threads"]
 
 import logging
 import traceback
 import os
+import sys
 
 logging.basicConfig(filename=os.path.expanduser('~')+'/.egd.log', level=logging.INFO, format='%(asctime)s %(levelname)s : %(message)s')
 
@@ -30,24 +31,29 @@ if __name__ == '__main__':
   logging.info('EGDoor Server Started')
   try:
     # Imports
-    import sys
     import acl
+    import utils
+    import systemconfig
+    import threads
+
     # Global configuration
     open_by_default = True
     
     # acl structure
     # try to load acl structure
     try:
-      egd_acl = acl.config.load("Acl")
+      egd_acl = config.load("Acl")
     except Exception as e:
       logging.warning("Except loading previous acl configuration, creating a new one %s" % e)
-      egd_acl = default_acl()
+      egd_acl = acl.default_acl()
 
-    tcommand = ThreadCommand(logging)
+    sc = systemconfig.systemconfig()
+
+    tcommand = threads.ThreadCommand(logging)
     tcommand.setDaemon(True)
     tcommand.start()
    
-    tsearch = ThreadSearch(logging)
+    tsearch = threads.ThreadSearch(logging)
     tsearch.setDaemon(True)
     tsearch.start()
  
@@ -57,54 +63,6 @@ if __name__ == '__main__':
   except KeyboardInterrupt:
     logging.exception('EGDoor Server Finished due to:')
     sys.exit(0)
-
-import threading
-class ThreadSearch(threading.Thread):
-  
-  def __init__(self, logging):
-    threading.Thread.__init__(self)
-    self.logging = logging
-  
-  def run(self):
-    print "Hello World, I'm searching!"
-    #while(True):
-    #  pass
-
-
-class ThreadCommand(threading.Thread):
-  
-  def __init__(self, logging):
-    threading.Thread.__init__(self)
-    self.logging = logging
-
-  def run(self):
-    import btserver
-    self.logging.info("Starting Command BT Server ...")
-    bts = btserver.BTServer()
-
-import acl
-def default_acl():
-  defaultacl = acl.Acl()
-  # roles
-  user = acl.Role("user")
-  defaultacl.set_role(user)
-  
-  manager = acl.Role("manager")
-  defaultacl.set_role(manager)
-
-  admin = acl.Role("admin")
-  defaultacl.set_role(admin)
-
-  # resources
-  lock = acl.Resource("lock")
-  lock.set_privilege("open")
-  lock.set_privilege("close")
-
-  admin.set_parent(manager)
-  manager.set_parent(user)
-
-  user.set_resource(lock)
-  return defaultacl
 
 if __name__ == "__main__":
   main()

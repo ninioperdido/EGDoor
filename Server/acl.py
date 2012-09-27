@@ -186,3 +186,21 @@ class Acl(object):
     def Resource(self, name):
       return Resource(name)
 
+def default_acl(): 
+  defaultacl = Acl()
+  # roles
+  user = Role("user")
+  defaultacl.set_role(user)
+  manager = Role("manager")
+  defaultacl.set_role(manager)
+  admin = Role("admin")
+  defaultacl.set_role(admin)
+  # resources
+  lock = Resource("lock")
+  lock.set_privilege("open")
+  lock.set_privilege("close")
+  admin.set_parent(manager)
+  manager.set_parent(user)
+  user.set_resource(lock)
+
+  return defaultacl                   

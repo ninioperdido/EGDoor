@@ -6,9 +6,12 @@ class config(object):
   conf_ext =  ".egd"
 
   @staticmethod
-  def save(obj):
-    pickle.dump(obj, open(config.conf_path+"."+str(type(obj).__name__)+config.conf_ext, "wb"))
-
+  def save(obj, name = None):
+    if not name:
+      pickle.dump(obj, open(config.conf_path+"."+str(type(obj).__name__)+config.conf_ext, "wb"))
+    else:
+      pickle.dump(obj, open(config.conf_path+"."+name+config.conf_ext, "wb"))
+ 
   @staticmethod
   def load(tobj):
     return pickle.load(open(config.conf_path+"."+tobj+config.conf_ext, "rb"))
