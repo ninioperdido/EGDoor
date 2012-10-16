@@ -36,7 +36,7 @@ class systemconfig(object):
                 logging.info("EGDoor.systemconfig, executing command: %s" % command)
               output = subprocess.check_call(command, shell=True)
               if output != 0:
-                logging.error("EGDoor.systemconfig, error executing last command.")
+                logging.error("EGDoor.systemconfig, error executing last command: %s" % command)
             elif item.startswith('DN'): # We're launching a daemon, but in order please ...
               d[item] = command
         except Exception as e:
@@ -87,8 +87,10 @@ class systemconfig(object):
     rod = OrderedDict(items)
     for item, value in rod.iteritems():
       try:
-        value.terminate()
+        output = subprocess.check_call("sudo kill " + str(value.pid), shell=True)
         time.sleep(1)
+        if output != 0:
+          logging.error("EGDoor.systemconfig, error executing last command: %s" % command)
       except Exception as e:
         logging.error("EGDoor.systemconfig Exception terminating daemon item: %s, %s" % (item, e))
 
