@@ -8,6 +8,7 @@ class BTServer(object):
     server_sock.bind(("", PORT_ANY))
     server_sock.listen(1)
     
+    port = server_sock.getsockname()[1]
     #TODO: Ex the command uuidgen for every machine
     uuid = "4fa05998-47e1-4f0a-9d87-f84c58cc1401"
     advertise_service( server_sock, 
@@ -15,9 +16,10 @@ class BTServer(object):
                        service_id = uuid,
                        service_classes = [uuid, SERIAL_PORT_CLASS],
                        profiles = [SERIAL_PORT_PROFILE])
-
+    
+    print "Waiting for connection on RFCOMM channel %d" % port
     client_sock, client_info = server_sock.accept()
-    logging.info("Accepted connection from %" % client_info)
+    print "Accepted connection from ", client_info
     
     try:
       while True:
@@ -30,5 +32,5 @@ class BTServer(object):
     #TODO: Main loop of the server
     client_sock.close()
     server_sock.close()
-    logging.info("Exited connection from BT Server")
+    print ("Exited connection from BT Server")
     

@@ -1,6 +1,6 @@
-import commands
-import logging
+import subprocess, shlex, logging, time
 from utils import config
+from collections import OrderedDict
 
 # Class that holds the underlying
 # OS configuration when the system
@@ -25,17 +25,35 @@ class systemconfig(object):
     logging.info("EGDoor.systemconfig configuration loaded")
 
   def configure(self):
+    d = {}
+
     for item in dir(self):
       if not item.startswith("__"):
+        command = getattr(self,item)
         try:
-            if item.startswith('OS'):
+            if item.startswith('OS'): # We're xcuting OS customization
               if debug:
-                logging.info("EGDoor.systemconfig, executing command: %s" % getattr(self,item))
-              output = (commands.getstatusoutput(getattr(self,item)))
-              if output[0] != 0:
+                logging.info("EGDoor.systemconfig, executing command: %s" % command)
+              output = subprocess.check_call(command, shell=True)
+              if output != 0:
                 logging.error("EGDoor.systemconfig, error executing last command.")
+            elif item.startswith('DN'): # We're launching a daemon, but in order please ...
+              d[item] = command
         except Exception as e:
           logging.error("EGDoor.systemconfig Exception configuring item: %s, %s" % (item, e)) 
+    
+    od = OrderedDict(sorted(d.items(), key=lambda t: t[0]))
+    for item,command in od.iteritems():
+      try:
+        if debug:
+          logging.info("EGDoor.systemconfig, launching daemon: %s" % command)
+        name = "PR_" + item
+        command = shlex.split(command)
+        setattr(self, name, subprocess.Popen(command))
+        time.sleep(1) # Time for the BT daemon to start
+      except Exception as e:
+        logging.error("EGDoor.systemconfig Exception launching daemon item: %s, %s" % (item, e)) 
+     
     self.configured = True
 
   def __str__(self):
@@ -58,4 +76,19 @@ class systemconfig(object):
 
   def __del__(self):
     config.save(self.__dict__, 'systemconfig')
+    d = {}
+    for item in dir(self):
+      if not item.startswith("__"):
+        if item.startswith("PR_"):
+          d[item] = getattr(self,item)
+    od = OrderedDict(sorted(d.items(), key=lambda t: t[0]))
+    items = od.items() # Because we terminate in reverse order
+    items.reverse()
+    rod = OrderedDict(items)
+    for item, value in rod.iteritems():
+      try:
+        value.terminate()
+        time.sleep(1)
+      except Exception as e:
+        logging.error("EGDoor.systemconfig Exception terminating daemon item: %s, %s" % (item, e))
 
