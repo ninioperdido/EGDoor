@@ -13,12 +13,13 @@ class ThreadSearch(threading.Thread):
 
 class ThreadCommand(threading.Thread):
 
-  def __init__(self, logging):
+  def __init__(self, logging, door):
     threading.Thread.__init__(self)
     self.logging = logging
+    self.door = door
 
   def run(self):
     import btserver
     self.logging.info("Starting Command BT Server ...")
-    bts = btserver.BTServer()
+    self.btserver = btserver.BTServer(self.door, self.logging)
 

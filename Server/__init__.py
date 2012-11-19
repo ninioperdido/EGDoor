@@ -16,7 +16,7 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__all__ = ["systemconfig", "utils", "btserver", "acl", "threads"]
+__all__ = ["systemconfig", "utils", "btserver", "acl", "threads", "rpi"]
 
 import logging
 import traceback
@@ -35,27 +35,28 @@ if __name__ == '__main__':
     import utils
     import systemconfig
     import threads
-
+    import door
+    import rpi
     # Global configuration
     open_by_default = True
     
     # acl structure
     # try to load acl structure
     try:
-      egd_acl = config.load("Acl")
+      al = config.load("Acl")
     except Exception as e:
       logging.warning("Except loading previous acl configuration, creating a new one %s" % e)
-      egd_acl = acl.default_acl()
+      al = acl.default_acl()
 
     sc = systemconfig.systemconfig()
-
-    tcommand = threads.ThreadCommand(logging)
-    tcommand.setDaemon(True)
-    tcommand.start()
+    dr = door.door()
+    tc = threads.ThreadCommand(logging, dr)
+    tc.setDaemon(True)
+    tc.start()
    
-    tsearch = threads.ThreadSearch(logging)
-    tsearch.setDaemon(True)
-    tsearch.start()
+    #tsearch = threads.ThreadSearch(logging)
+    #tsearch.setDaemon(True)
+    #tsearch.start()
  
     
     while(True):
@@ -63,6 +64,9 @@ if __name__ == '__main__':
   except KeyboardInterrupt:
     logging.exception('EGDoor Server Finished due to:')
     sys.exit(0)
+
+  finally:
+    config.save(al)
 
 if __name__ == "__main__":
   main()
