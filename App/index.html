@@ -8,14 +8,14 @@
     <link rel='stylesheet' href='css/lungo.icon.css'>
     <link rel='stylesheet' href='css/lungo.theme.default.css'>
     <link rel="stylesheet" href="css/lungo.icon.brand.css">
-    <title>EGDoor App v0.1</title>
+    <title>EGDoor App v0.2</title>
   </head>
   
   <body class='app'>
   
  
   <!-- Main screen -->
-  <section id='main'>
+  <section id='main' data-transition='slide'>
     <header class='facebook'>
       <div class="centered title with-subtitle">
         EGDoor
@@ -29,36 +29,45 @@
       </nav>
    </header>
    <footer class='toolbar'>
-     <nav class='with-labels'>
-     </nav>
-     <nav class='right with-labels'>
-       <a href='#' data-icon='settings' data-label='Configuración'></a>
+     <nav class='right'>
+       <a href='#settings' data-router='aside' data-icon='settings' data-label='Configuración'></a>
      </nav>
    </footer>
 
-   <article id='main_main' class='list indented scroll'>
-     <div id='found locks'>
-     <strong>Cerraduras encontradas ...</strong>
-     </div>
-     <ul>
-       <li data-icon='broadcast' class='feature green'>
-         <strong>Abrir cerradura</strong>
-         <small>Puerta de casa (garaje)</small>
-       </li>
-     </ul>
-     <div id='configured locks'>
-     <strong>Cerraduras configuradas ...</strong>
-     </div>
-     <ul>
-       <li data-icon='broadcast' class='disabled'>
-         Puerta del trabajo (cochera)
-         <small>Fuera de rango</small>
-       </li>
-       <li data-icon='broadcast' class='disabled'>
-         Hotel Punta Umbria (H324)
-         <small>Fuera de rango</small>
-       </li>
-    </ul>
+   <article id='main_main' class='list'>
+   <ul>
+     <li class='default'>
+       <a href='#'>
+         <strong>Cerraduras encontradas ...</strong>
+         <div class="right bubble green">1</div>
+       </a>
+     </li>
+     
+     <li data-icon='broadcast' class='indented feature current green'>
+       <strong>Abrir cerradura</strong>
+       <small>Puerta de casa (garaje)</small>
+     </li>
+   </ul>
+   <ul>
+    <li style='border:0px;'></li>
+   </ul>
+   <ul>
+     <li class='disabled'>
+       <a href='#'>
+         <strong>Cerraduras configuradas ...</strong>
+         <div class="right bubble red">2</div>
+       </a>
+     </li>
+   
+     <li data-icon='broadcast' class='indented disabled'>
+       Puerta del trabajo (cochera)
+       <small>Fuera de rango</small>
+     </li>
+     <li data-icon='broadcast' class='indented disabled'>
+       Hotel Punta Umbria (H324)
+       <small>Fuera de rango</small>
+     </li>
+  </ul>
 
     </article>
   </section>
@@ -77,27 +86,24 @@
     </article>
   </section>
   
-  <!-- In case of tablet like device -->
-  <aside id='profile-aside' class='rigth'>
-    <header data-title='Menu'></header>
-    <article class='list'>
-      <ul>
-        <li>Option 1</li>
-        <li>Option 2</li>
-      </ul>
-    </article>
-  </aside>
-
-
-     <!-- Lungo Script -->
-     <script src='js/quo.js'></script>
-     <script src='js/lungo.js'></script>
-     <!-- Sandbox init -->
-     <script>
-     Lungo.init({
-       data    : 'EGDoor App',
-       version : '0.1'
-       });
-     </script>
+  <section> 
+    <aside id='settings' class='right small'>
+      <nav> 
+        <a href="#aside-example" data-router="article" class='button small' data-icon="clock"></a> 
+        <a href="#aside-example" data-router="article" data-icon="plus"></a>                       
+        <a href="#aside-example" data-router="article" data-icon="minus"></a>
+      </nav> 
+    </aside>
+  </section>                
+   <!-- Lungo Script -->
+   <script src='js/quo.js'></script>
+   <script src='js/lungo.js'></script>
+   <!-- Sandbox init -->
+   <script>
+   Lungo.init({
+     data    : 'EGDoor App',
+     version : '0.2'
+     });
+   </script>
    </body>
 </html>
