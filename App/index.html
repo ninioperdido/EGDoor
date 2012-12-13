@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' dir='ltr' lang='en-US'>
+  <head profile='http://gmpg.org/xfn/11'>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+
+    <!-- Lungo CSS -->
+    <link rel='stylesheet' href='css/lungo.css'>
+    <link rel='stylesheet' href='css/lungo.icon.css'>
+    <link rel='stylesheet' href='css/lungo.theme.default.css'>
+    <link rel="stylesheet" href="css/lungo.icon.brand.css">
+    <title>EGDoor App v0.1</title>
+  </head>
+  
+  <body class='app'>
+  
+ 
+  <!-- Main screen -->
+  <section id='main'>
+    <header class='facebook'>
+      <div class="centered title with-subtitle">
+        EGDoor
+        <small class="subtitle">Your wireless key</small>
+      </div>
+      <nav class="left">
+        <a href="#" data-router="section" data-icon="lock"></a>
+      </nav>
+      <nav class="right">
+        <a href="#" data-router="section" data-icon="refresh"></a>
+      </nav>
+   </header>
+   <footer class='toolbar'>
+     <nav class='with-labels'>
+     </nav>
+     <nav class='right with-labels'>
+       <a href='#' data-icon='settings' data-label='Configuración'></a>
+     </nav>
+   </footer>
+
+   <article id='main_main' class='list indented scroll'>
+     <div id='found locks'>
+     <strong>Cerraduras encontradas ...</strong>
+     </div>
+     <ul>
+       <li data-icon='broadcast' class='feature green'>
+         <strong>Abrir cerradura</strong>
+         <small>Puerta de casa (garaje)</small>
+       </li>
+     </ul>
+     <div id='configured locks'>
+     <strong>Cerraduras configuradas ...</strong>
+     </div>
+     <ul>
+       <li data-icon='broadcast' class='disabled'>
+         Puerta del trabajo (cochera)
+         <small>Fuera de rango</small>
+       </li>
+       <li data-icon='broadcast' class='disabled'>
+         Hotel Punta Umbria (H324)
+         <small>Fuera de rango</small>
+       </li>
+    </ul>
+
+    </article>
+  </section>
+
+  <section id='manage'>
+    <article id='manage_main'>
+      Push to manage de door
+      <a href='#main' data-router='section' data-icon='home'></a>
+    </article>
+  </section>
+
+  <section id='maintenance'>
+    <article id='maintenance_main'>
+      Push to manage de door
+      <a href='#main' data-router='section' data-icon='home'></a>
+    </article>
+  </section>
+  
+  <!-- In case of tablet like device -->
+  <aside id='profile-aside' class='rigth'>
+    <header data-title='Menu'></header>
+    <article class='list'>
+      <ul>
+        <li>Option 1</li>
+        <li>Option 2</li>
+      </ul>
+    </article>
+  </aside>
+
+
+     <!-- Lungo Script -->
+     <script src='js/quo.js'></script>
+     <script src='js/lungo.js'></script>
+     <!-- Sandbox init -->
+     <script>
+     Lungo.init({
+       data    : 'EGDoor App',
+       version : '0.1'
+       });
+     </script>
+   </body>
+</html>
